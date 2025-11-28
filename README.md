@@ -691,7 +691,12 @@ echo "nameserver 192.168.122.1" > /etc/resolv.conf
 ```
 
 
-## Misi 2 No. 1 - Misi 1 No. 4
+## Misi 2 No. 1 
+### Jaringan Aliansi bisa terhubung ke luar (Valinor/Internet), konfigurasi routing menggunakan iptables. :
+```bash
+iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source 192.168.122.35
+```
+## Misi 1 No. 4 :
 Pertama-tama, kita akan konfigurasi DHCP Server
 
 ### DHCP Server - Vilya
