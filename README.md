@@ -1014,3 +1014,148 @@ Menggunakan subnet diperlukan karena client menggunakan DHCP. Jika berhasil maka
 ### Hari Sabtu
 
 <img width="1061" height="149" alt="image" src="https://github.com/user-attachments/assets/4c476cbd-c798-4ef0-a43a-21e4f8639557" />
+
+## Misi 2 No. 5
+Untuk dapat melakukan shift di jam tertentu, kita akan mengkonfigurasi Palantir. 
+```
+# Shift Pagi di Subnet A6 (Gilgalad & Cirdan)
+iptables -A INPUT -p tcp --dport 80 -s 10.78.1.0/25 -m time --timestart 07:00 --timestop 15:00 -j ACCEPT
+
+# Shift Malam di Subnet A5 (Elendil & Isildur)
+iptables -A INPUT -p tcp --dport 80 -s 10.78.0.0/24 -m time --timestart 17:00 --timestop 23:00 -j ACCEPT
+
+# Blokir Sisanya
+iptables -A INPUT -p tcp --dport 80 -j DROP
+```
+Setelah itu, jalankan `nginx` di Palantir.
+
+```
+service nginx start
+```
+
+Cek di Client menggunakan command ini.
+
+```
+curl 10.78.1.218
+```
+
+Jika berhasil, maka akan muncul seperti ini.
+
+### Elendil
+<img width="631" height="121" alt="image" src="https://github.com/user-attachments/assets/643d48a8-710a-42d2-bf8d-7ed2e47bb30f" />
+
+### Cirdan
+<img width="619" height="539" alt="image" src="https://github.com/user-attachments/assets/5740ae90-dcd1-451e-831a-a6b9848fd44b" />
+
+Di mana pada pukul `12:51:33 UTC` Cirdan dapat terhubung dengan Palantir, sedangkan Elendil tidak dapat terhubung dengan Palantir. Ini menunjukkan bahwa konfigurasi sukses.
+
+
+## Soal 2 No. 7
+Kita akan membatasi akses ke IronHills maksimal 3 koneksi dalam waktu yang bersaman. Kita akan melakukan konfigurasi pada IronHills. 
+```
+iptables -F
+
+# Limit akses hingga 3 koneksi dalam waktu yang bersamaan
+iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit-above 3 --connlimit-mask 32 -j REJECT --reject-with tcp-reset
+
+# Aturan Akses Waktu
+# Subnet Durin (A2)
+iptables -A INPUT -p tcp --dport 80 -s 10.78.1.128/26 -m time --weekdays Sat,Sun -j ACCEPT
+
+# Subnet Khamul (A3)
+iptables -A INPUT -p tcp --dport 80 -s 10.78.1.192/29 -m time --weekdays Sat,Sun -j ACCEPT
+
+# Subnet Elendil & Isildur (A5)
+iptables -A INPUT -p tcp --dport 80 -s 10.78.0.0/24 -m time --weekdays Sat,Sun -j ACCEPT
+
+# Blokir Sisanya
+iptables -A INPUT -p tcp --dport 80 -j DROP
+```
+
+Lalu, kita coba test di Client yang bersangkutan. Kita dapa tmembuat file script dengan isi seperti ini.
+
+`curl_test.sh`
+
+```bash
+echo "--- TES BUKTI LIMIT 3 IP ---"
+# Kita jalankan 10 request SEKALIGUS (background)
+for i in {1..10}; do
+  curl -s -o /dev/null -w "Request $i: %{http_code}\n" --connect-timeout 2 http://10.78.1.210/ &
+done
+wait
+```
+
+Lalu jalankan dengan command ini.
+```
+chmod +x curl_test.sh
+./curl_test.sh
+```
+
+Jika berhasil maka akan muncul seperti ini.
+
+<img width="398" height="313" alt="image" src="https://github.com/user-attachments/assets/db9fe9bf-cb5a-466e-a0ef-764179ffe929" />
+
+
+
+## Misi 2 No. 8
+Agar pesannya dapat dibelokkan ke IronHills, maka kita perlu mengkonfigurasi Moria. Untuk konfigurasinya seperti ini.
+
+```
+iptables -t nat -A PREROUTING -s 10.78.1.203 -d 10.78.1.196 -p tcp --dport 5555 -j DNAT --to-destination 10.78.1.210:5555
+```
+
+Setelah itu, jalankan kode ini pada Vilya, IronHills, dan Khamul.
+```
+nc -l -p 5555
+```
+
+Lalu, Kita dapat mencoba mengirim pesan dari VIlya dengan mengetikkan `Hai Khamul`. Jika berhasil maka akan muncul seperti ini.
+
+### Vilya
+<img width="348" height="56" alt="image" src="https://github.com/user-attachments/assets/51783bc0-130c-42e9-9133-fa850a5a97c5" />
+
+### IronHills
+<img width="376" height="65" alt="image" src="https://github.com/user-attachments/assets/9a336e4c-ebcf-44d0-b615-2104f591ac60" />
+
+### Khamul
+<img width="316" height="47" alt="image" src="https://github.com/user-attachments/assets/8c193c64-a9c2-47e4-a44c-de9103edab89" />
+
+Di mana pesannya muncul di IronHills, bukan Khamul. Ini menandakan bahwa konfigurasi berhasil.
+
+## Misi 3 No. 1
+Pada soal terakhir, kita akan mencoba konfigurasi pada Wilderland. Untuk konfigurasinya seperti ini.
+```
+iptables -F FORWARD
+iptables -I FORWARD -i eth2 -m mac --mac-source 02:42:79:29:0c:00 -j DROP
+```
+Di mana `02:42:79:29:0c:00` adalah mac milik Khamul (dapat dicek pada `ip a show eth0` pada Khamul). Mengapa menggunakan mac? Karena Khamul merupakan DHCP Client, apabila menggunakan IP maka kemungkinan dapat terjadi salah konfigurasi.
+
+Untuk pengujiannya dapat menggunakan command seperti ini.
+
+### `ping`
+```
+ping <IP Khamul/Client lain>
+```
+
+### `nc`
+```
+# Sender
+nc -v <IP Tujuan> 8888
+
+# Listener
+nc -l -p 8888 
+```
+Jika berhasil maka akan muncul seperti ini.
+
+### IronHills ke Khamul
+
+<img width="646" height="217" alt="image" src="https://github.com/user-attachments/assets/684b4234-b700-4f0c-bbc2-bfdb68bd5953" />
+
+<img width="615" height="48" alt="image" src="https://github.com/user-attachments/assets/88f251a5-a4b2-47e4-82bf-1118d3e17147" />
+
+### Khamul ke IronHills
+
+<img width="384" height="47" alt="image" src="https://github.com/user-attachments/assets/fd984f63-7360-4f4b-86a9-00a0991342cf" />
+
+<img width="632" height="217" alt="image" src="https://github.com/user-attachments/assets/87f77c6a-4ae7-42ff-9802-a913f0622c03" />
+
