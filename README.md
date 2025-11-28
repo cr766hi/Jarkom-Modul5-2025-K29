@@ -1056,7 +1056,7 @@ Jika berhasil, maka akan muncul seperti ini.
 Di mana pada pukul `12:51:33 UTC` Cirdan dapat terhubung dengan Palantir, sedangkan Elendil tidak dapat terhubung dengan Palantir. Ini menunjukkan bahwa konfigurasi sukses.
 
 
-## Soal 2 No. 6
+## Misi 2 No. 6
 Kita akan mengkonfigurasi Palantir menggunakan iptables. Untuk kodenya seperti ini.
 
 ```
@@ -1096,7 +1096,7 @@ Jika berhasil, maka akan muncul seperti ini.
 <img width="630" height="768" alt="image" src="https://github.com/user-attachments/assets/110810b6-cfa1-4351-814e-565143c63459" />
 
 
-## Soal 2 No. 7
+## Misi 2 No. 7
 Kita akan membatasi akses ke IronHills maksimal 3 koneksi dalam waktu yang bersaman. Kita akan melakukan konfigurasi pada IronHills. 
 ```
 iptables -F
