@@ -1,6 +1,15 @@
 # Jarkom-Modul5-2025-K29
 
+### Praktikum Jaringan Komputer Modul 5 :
 
+---
+
+## 👥 Kelompok IT29
+
+| Nama | NRP |
+|------|-----|
+| Christiano Ronaldo Silalahi | 5027241025 |
+| Jofanka Al Kautsar P A | 5027241103 |
 
 ## Misi 1: Memetakan Medan Perang
 ### Identifikasi Perangkat:
