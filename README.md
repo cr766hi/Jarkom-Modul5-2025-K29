@@ -45,6 +45,8 @@ Tabel berikut merangkum alokasi alamat IP untuk berbagai subnet, termasuk Networ
 <img width="1920" height="1080" alt="Teks paragraf Anda" src="https://github.com/user-attachments/assets/6a8631a9-10c5-4e74-8a33-51773d1327f3" />
 
 
+### konfigurasi rute untuk menghubungkan semua subnet. Sehingga perangkat dapat saling terhubung :
+
 Osgiliath
 
 /etc/network/interfaces
