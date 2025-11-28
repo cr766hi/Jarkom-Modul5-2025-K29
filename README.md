@@ -42,6 +42,7 @@ Tabel berikut merangkum alokasi alamat IP untuk berbagai subnet, termasuk Networ
 | **A13** | Minastir > Osgiliath | 10.78.1.236/30 | 10.78.1.237 | 10.78.1.239 | 10.78.1.237 - 10.78.1.238 | 2 | 4 | 255.255.255.252 |
 
 ### Pohon subnet yang menunjukkan hierarki pembagian IP di jaringan Aliansi, dan lingkaran subnet yang akan dilewati :
+<img width="1920" height="1080" alt="Teks paragraf Anda" src="https://github.com/user-attachments/assets/6a8631a9-10c5-4e74-8a33-51773d1327f3" />
 
 
 Osgiliath
