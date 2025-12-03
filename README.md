@@ -9,7 +9,7 @@
 | Nama | NRP |
 |------|-----|
 | Christiano Ronaldo Silalahi | 5027241025 |
-| Jofanka Al Kautsar P A | 5027241103 |
+| Jofanka Al Kautsar P A | 5027241107 |
 
 ## Misi 1: Memetakan Medan Perang
 ### Identifikasi Perangkat:
