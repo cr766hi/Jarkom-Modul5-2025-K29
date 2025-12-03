@@ -4,7 +4,7 @@
 
 ---
 
-## 👥 Kelompok IT29
+## 👥 Kelompok K-29
 
 | Nama | NRP |
 |------|-----|
